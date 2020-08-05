@@ -140,7 +140,7 @@ plt.xlabel('Number of clusters')
 plt.ylabel('Persentage of variance explained adj')
 plt.tight_layout()
 plt.savefig('elbow_graphs.png')
-'''
+
 ########  Average Silhouette Method
 
 score = []
@@ -188,7 +188,7 @@ plt.ylabel('Cluster')
 plt.xlabel('Silhouette coefficient')
 plt.title("Silouette for K-means")
 plt.savefig('Silouette_graphs.png')
-
+'''
 #####  Hierarchical Clustering
 '''
 # Agglomerative Cluster
