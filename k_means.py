@@ -95,35 +95,6 @@ plt.ylabel('Count')
 plt.suptitle('Sample Chart')
 #plt.tight_layout()  #(pad=1)
 plt.savefig('barchart.png',dpi=100)
-'''
-## create a colormap
-cmap=ListedColormap(['r', 'g', 'b', 'c'])
-plt.subplot(2,2,1)
-plt.scatter(df['safety'],df['acceptability'],c=cmap(df['buying']),marker='o',s=50)
-plt.xlabel('safety')
-plt.ylabel('acceptability')
-plt.title('Buying(Actual)')
-
-plt.subplot(2,2,2)
-plt.scatter(df['safety'],df['acceptability'],c=cmap(df['pred_buying']),marker='o',s=50)
-plt.xlabel('safety')
-plt.ylabel('acceptability')
-plt.title('Buying(Predicted)')
-
-plt.subplot(2,2,3)
-plt.scatter(iris['petal length (cm)'],iris['petal width (cm)'],c=cmap(iris['species']),marker='o',s=50)
-plt.xlabel('petallength(cm)')
-plt.ylabel('petalwidth(cm)')
-plt.title('Petal(Actual)')
-
-plt.subplot(2,2,4)
-plt.scatter(iris['petal length (cm)'],iris['petal width (cm)'],c=cmap(iris['pred_species']),marker='o',s=50)
-plt.xlabel('petallength(cm)')
-plt.ylabel('petalwidth(cm)')
-plt.title('Petal(Predicted)')
-'''
-plt.tight_layout()
-plt.savefig('groups.png')
 
 #####  Finding the value of k
 '''
