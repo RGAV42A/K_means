@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-#from pylab import *
 import matplotlib.pyplot as plt
 from numpy import nan as NA
 #from sklearn.preprocessing import LabelEncoder
@@ -28,45 +27,88 @@ from sklearn.metrics import silhouette_samples, silhouette_score
 from matplotlib import cm
 
 #####  Clustering  ####
+'''
 ## load data
-iris=datasets.load_iris()
-## convert the dataframe
-iris=pd.DataFrame(data=np.c_[iris['data'],iris['target']],columns=iris['feature_names']+['species'])
-## removing whitespace
-iris.columns=iris.columns.str.strip()  ### strip se izvikwa z str.
-iris.head()
+path='car_evaluation.csv'
+names=['buying','maint','doors','persons','lug_boot','safety','acceptability']
+dataframe=pd.read_csv(path,delimiter=',',names=names)
+
+###  LABEL ENCODING
+
+for ix in names:
+    iy = dataframe[ix].unique()
+    dataframe[ix].replace(iy, range(1,len(iy)+1), inplace = True)
+dataframe.to_csv('car_eval_encoded.csv',index=False)
+'''
+#### LOAD ENCODED DATA
+df=pd.read_csv('car_eval_encoded.csv')
+
+### CALC INTERACTIONS
+rfactors=['maint','doors','persons','lug_boot','safety','acceptability']
+
+#for ix in range(0,len(rfactors)-1):
+    #for iy in range(ix+1,len(rfactors)):
+        #new_name=str(rfactors[ix]+'_'+rfactors[iy])
+        #df[new_name]=df[rfactors[ix]]*df[rfactors[iy]]
+
 ## prepare data
-x=iris.iloc[:,:3]
-y=iris.species
-sc=StandardScaler()
-sc.fit(x)
-x=sc.transform(x)
+Y=df['buying']
+X=df[rfactors]
+
+#Y=df.iloc[:,0]
+#X=df.iloc[:,1:22]
+
+
 ### K Means Cluster
-model=KMeans(n_clusters=3,random_state=11)
-model.fit(x)
-#print(model.labels_)
+model=KMeans(n_clusters=4,random_state=11)
+model.fit(X)
+
 ### smeniame 1 ot fit na 0; 0 ot fit na 1,kakto waw faila
-iris['pred_species']=np.choose(model.labels_,[1,0,2]).astype(np.int64)
+df['pred_buying']=np.choose(model.labels_,[1,2,3,4]).astype(np.int64)
+
 ## show results
-print('Accuracy:',metrics.accuracy_score(iris['species'],iris['pred_species']))
-print('Classification report:',metrics.classification_report(iris['species'],iris['pred_species']))
+print('Accuracy:',metrics.accuracy_score(df['buying'],df['pred_buying']))
+print('Classification report:',metrics.classification_report(df['buying'],df['pred_buying']))
+
 ## plot results
+labels_1 = ['low', 'med','high','vhigh']
 plt.figure(figsize=(10,7))
 
-iris['species']=iris['species'].astype(np.int64)
+#####  Side by Side Bar Chart   ####
+# generate simple data
+ix = df['pred_buying'].value_counts(sort=False)
+iy = df['buying'].value_counts(sort=False)
+
+pre=iy.values
+post=ix.values
+labels=['low', 'med','high','vhigh']
+# the plot - left and right
+width=0.4 # bar width
+xlocs=np.arange(len(pre))
+plt.bar(xlocs-width,pre,width,color='green',label='buying')
+plt.bar(xlocs,post,width,color='#1f10ed',label='pred_buying')
+# labels,grids,titles,save
+plt.xticks(range(len(pre)),labels)
+
+plt.legend(loc='best')
+plt.ylabel('Count')
+plt.suptitle('Sample Chart')
+#plt.tight_layout()  #(pad=1)
+plt.savefig('barchart.png',dpi=100)
+'''
 ## create a colormap
-cmap=ListedColormap(['r','g','b'])
+cmap=ListedColormap(['r', 'g', 'b', 'c'])
 plt.subplot(2,2,1)
-plt.scatter(iris['sepal length (cm)'],iris['sepal width (cm)'],c=cmap(iris['species']),marker='o',s=50)
-plt.xlabel('sepallength(cm)')
-plt.ylabel('sepalwidth(cm)')
-plt.title('Sepal(Actual)')
+plt.scatter(df['safety'],df['acceptability'],c=cmap(df['buying']),marker='o',s=50)
+plt.xlabel('safety')
+plt.ylabel('acceptability')
+plt.title('Buying(Actual)')
 
 plt.subplot(2,2,2)
-plt.scatter(iris['sepal length (cm)'],iris['sepal width (cm)'],c=cmap(iris['pred_species']),marker='o',s=50)
-plt.xlabel('sepallength(cm)')
-plt.ylabel('sepalwidth(cm)')
-plt.title('Sepal(Predicted)')
+plt.scatter(df['safety'],df['acceptability'],c=cmap(df['pred_buying']),marker='o',s=50)
+plt.xlabel('safety')
+plt.ylabel('acceptability')
+plt.title('Buying(Predicted)')
 
 plt.subplot(2,2,3)
 plt.scatter(iris['petal length (cm)'],iris['petal width (cm)'],c=cmap(iris['species']),marker='o',s=50)
@@ -79,6 +121,7 @@ plt.scatter(iris['petal length (cm)'],iris['petal width (cm)'],c=cmap(iris['pred
 plt.xlabel('petallength(cm)')
 plt.ylabel('petalwidth(cm)')
 plt.title('Petal(Predicted)')
+'''
 plt.tight_layout()
 plt.savefig('groups.png')
 
@@ -137,7 +180,7 @@ plt.xlabel('Number of clusters')
 plt.ylabel('Persentage of variance explained adj')
 plt.tight_layout()
 plt.savefig('elbow_graphs.png')
-'''
+
 ########  Average Silhouette Method
 
 score = []
@@ -183,5 +226,5 @@ plt.ylabel('Cluster')
 plt.xlabel('Silhouette coefficient')
 plt.title("Silouette for K-means")
 plt.savefig('Silouette_graphs.png')
-
+'''
 
