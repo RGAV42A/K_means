@@ -45,7 +45,7 @@ dataframe.to_csv('car_eval_encoded.csv',index=False)
 df=pd.read_csv('car_eval_encoded.csv')
 
 ### CALC INTERACTIONS
-rfactors=['maint','doors','persons','lug_boot','safety','acceptability']
+rfactors=['maint','doors','persons','lug_boot','safety','buying']
 
 #for ix in range(0,len(rfactors)-1):
     #for iy in range(ix+1,len(rfactors)):
@@ -53,13 +53,13 @@ rfactors=['maint','doors','persons','lug_boot','safety','acceptability']
         #df[new_name]=df[rfactors[ix]]*df[rfactors[iy]]
 
 ## prepare data
-Y=df['buying']
+Y=df['acceptability']
 X=df[rfactors]
 
 #Y=df.iloc[:,0]
 #X=df.iloc[:,1:22]
 
-'''
+
 ### K Means Cluster
 model=KMeans(n_clusters=4,random_state=11)
 model.fit(X)
@@ -78,8 +78,9 @@ plt.figure(figsize=(10,7))
 #####  Side by Side Bar Chart   ####
 # generate simple data
 ix = df['pred_buying'].value_counts(sort=False)
+print('pred_buying',ix)
 iy = df['buying'].value_counts(sort=False)
-
+print('buying',iy)
 pre=iy.values
 post=ix.values
 labels=['low', 'med','high','vhigh']
@@ -188,7 +189,7 @@ plt.ylabel('Cluster')
 plt.xlabel('Silhouette coefficient')
 plt.title("Silouette for K-means")
 plt.savefig('Silouette_graphs.png')
-'''
+
 #####  Hierarchical Clustering
 '''
 # Agglomerative Cluster
